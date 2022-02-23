@@ -1,0 +1,46 @@
+enable
+configure terminal
+hostname Niessie
+enable secret class
+line console 0
+password cisco
+login
+exit
+line vty 0 4
+password cisco
+login
+exit
+service password-encryption
+banner motd $ Welcome to Niessie $
+interface ethernet 0/0
+ip address 192.168.23.3 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 3.3.3.3 255.255.255.0
+exit
+
+router eigrp 1
+network 192.168.23.0 0.0.0.255
+eigrp router-id 3.3.3.3
+exit
+
+interface Tunnel1
+ip address 192.168.13.3 255.255.255.0
+ip mtu 1400
+ip tcp adjust-mss 1360
+tunnel source 192.168.23.3
+tunnel destination 192.168.12.1
+exit
+interface loopback 1
+ip address 33.33.33.33 255.255.255.0
+exit
+
+router ospf 1
+network 33.33.33.33 0.0.0.255 area 0
+network 192.168.13.0 0.0.0.255 area 0
+router-id 3.3.3.3
+exit
+
+exit
+copy running-config startup-config

@@ -1,0 +1,3 @@
+useful commnad
+#show interface info
+show ip interface brief
